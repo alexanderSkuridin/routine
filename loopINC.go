@@ -8,23 +8,34 @@ import (
 
 var counter int64
 
-func add(size int, wg *sync.WaitGroup) {
+func add(size int) {
+	wg := sync.WaitGroup{}
 	for i := 0; i < size; i++ {
 		atomic.AddInt64(&counter, 1)
 	}
 
-	wg.Done()
+	defer wg.Done()
 }
 
 func main() {
 	wg := sync.WaitGroup{}
 	wg.Add(5)
 
-	go add(1000, &wg)
-	go add(1000, &wg)
-	go add(1000, &wg)
-	go add(1000, &wg)
-	go add(1000, &wg)
+	go func() {
+		add(1000)
+	}()
+	go func() {
+		add(1000)
+	}()
+	go func() {
+		add(1000)
+	}()
+	go func() {
+		add(1000)
+	}()
+	go func() {
+		add(1000)
+	}()
 
 	wg.Wait()
 	fmt.Println(counter)
