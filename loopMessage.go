@@ -8,10 +8,14 @@ import (
 var messages []string
 
 func push(message string, wg *sync.WaitGroup) {
+	mu := sync.Mutex{}
 	for i := 0; i < 100; i++ {
+		mu.Lock()
 		messages = append(messages, message)
+		mu.Unlock()
 	}
 	wg.Done()
+
 }
 
 func main() {
